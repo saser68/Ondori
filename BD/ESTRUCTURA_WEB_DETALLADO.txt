@@ -1,0 +1,132 @@
+ESTRUCTURA DETALLADA DEL PROYECTO ONDORI (archivo por archivo)
+
+Raíz/
+- artisan: CLI de Laravel — ejecuta comandos Artisan (migrate, tinker, serve, etc.).
+- composer.json: Dependencias PHP y autoload. Contiene paquetes, scripts y requisitos PHP.
+- package.json: Dependencias frontend (tailwindcss, vite, plugins) y scripts (`dev`, `build`).
+- README.md: Información general del proyecto y pasos básicos.
+- ESTRUCTURA.md: Documentación sobre la arquitectura del proyecto.
+- GIT_WORKFLOW.md: Flujo de trabajo recomendado con Git.
+- NOTAS.md: Notas varias del proyecto.
+
+BD/
+- ONDORI.sql: Dump de la base de datos (tablas y datos iniciales).
+- ESTRUCTURA_WEB.txt: Resumen esquemático (generado previamente).
+- ESTRUCTURA_WEB_DETALLADO.txt: (este archivo) esquema detallado archivo por archivo.
+
+app/
+- Http/
+  - Controllers/: Controladores HTTP que procesan las peticiones y devuelven vistas/respuestas.
+    - (varios archivos .php): cada controlador gestiona recursos (p. ej. AuthController, ProductController).
+  - Requests/: Clases de validación de solicitudes (FormRequests) que centralizan reglas de validación.
+- Mail/
+  - PurchaseConfirmation.php: Mailable que construye y envía el correo de confirmación de compra.
+  - WelcomeEmail.php: Mailable para correos de bienvenida.
+- Models/
+  - Administrador.php: Modelo Eloquent para administradores (relaciones/atributos específicos).
+  - Categoria.php: Modelo para categorías de productos.
+  - Direccion.php: Modelo para direcciones de usuarios.
+  - Hombre.php, Mujer.php: Modelos para colecciones o tipos de producto por género.
+  - Oferta.php: Modelo para las ofertas/promociones.
+  - Pedido.php: Modelo para pedidos.
+  - PedidoDetalle.php: Modelo para los detalles de un pedido.
+  - User.php: Modelo principal de usuario (autenticación, relaciones).
+  - Usuario.php: Posible alias o modelo adicional de usuario (revisar uso concreto en la app).
+- Providers/
+  - AppServiceProvider.php: Registro de bindings y configuraciones a nivel de aplicación.
+- View/
+  - Components/: Componentes Blade reutilizables.
+
+bootstrap/
+- app.php: Arranque de la aplicación (creación del contenedor, binding de servicios básicos).
+- providers.php: Lista de providers cargados en bootstrap.
+- cache/: Archivos de cache generados por el framework (no editar manualmente).
+
+config/
+- app.php: Configuración de la aplicación (nombre, timezone, providers, aliases).
+- auth.php: Configuración de autenticación (guards, providers, password brokers).
+- database.php: Configuración de conexión a BD y migraciones.
+- mail.php: Configuración de envío de correos.
+- queue.php, services.php, session.php, logging.php, filesystems.php, cache.php: Otras configuraciones por responsabilidad.
+
+database/
+- factories/
+  - UserFactory.php: Factory para crear instancias de `User` en tests y seeders.
+- migrations/
+  - 0001_01_01_000000_create_users_table.php: Ejemplo de migración que crea la tabla `users`.
+  - otras migraciones: Definen la estructura de las tablas del proyecto.
+- seeders/
+  - DatabaseSeeder.php: Orquestador que llama a seeders específicos para poblar la BD.
+
+public/
+- index.php: Punto de entrada público (front controller) que carga la app.
+- robots.txt: Políticas para indexación de motores de búsqueda.
+- build/
+  - manifest.json: Mapa de assets compilados por Vite.
+  - assets/: Archivos CSS/JS/imagen compilados (p. ej. app-<hash>.css).
+- img/: Imágenes públicas agrupadas por carpetas (`hombre/`, `mujer/`, `ofertas/`).
+
+resources/
+- css/
+  - app.css: Archivo principal con `@tailwind` y estilos personalizados (botones, sombras, antiguas animaciones que se han simplificado).
+- js/
+  - app.js: Entrada JS del frontend; importa dependencias, inicializa componentes y bootstrap.js.
+  - bootstrap.js: Código de bootstrap frontend (p. ej. inicialización de librerías, setup de Axios).
+- views/
+  - welcome.blade.php, profile.blade.php: Vistas de ejemplo/usuario.
+  - admin/: Vistas del panel administrativo (`dashboard.blade.php` — archivo abierto actualmente).
+  - auth/: Vistas de autenticación (login, register, password reset).
+  - checkout/: Vistas relacionadas al proceso de compra.
+  - components/: Fragmentos Blade reutilizables.
+  - emails/: Plantillas para emails enviados por `Mail`.
+  - layouts/: Plantillas base (`app.blade.php`, `admin.blade.php`) que contienen `@yield` y `@stack`.
+  - partials/: Partes de vista como header, footer, nav, etc.
+
+routes/
+- web.php: Rutas web públicas y controladores asignados. Define rutas GET/POST, middleware y nombres de rutas.
+- auth.php: Rutas relacionadas con autenticación (login/logout, registro, password resets).
+- console.php: Registro de comandos Artisan personalizados si los hay.
+
+storage/
+- app/: Archivos subidos por usuarios (privados y públicos según uso).
+- framework/
+  - cache/: Cachés generados por Laravel.
+  - sessions/: Archivos de sesión si se usa driver `file`.
+  - views/: Vistas compiladas si se usa cache de vistas.
+- logs/: Archivos de log (`laravel.log`).
+
+framework/
+- cache/, sessions/, testing/, views/: Artefactos del framework, no editar manualmente.
+
+vendor/
+- dependencias de Composer: Laravel y paquetes de terceros. Contienen código de framework y utilidades (no modificar directamente).
+
+tests/
+- TestCase.php: Clase base para tests con helpers/global setup.
+- Feature/: Tests de integración/funcionales (p. ej. `ProfileTest.php`).
+- Unit/: Tests unitarios.
+
+Archivos de build/configuración frontend
+- tailwind.config.js: Define `content` (rutas para purga), `theme.extend` y plugins como `@tailwindcss/forms`.
+- postcss.config.js: Configuración de PostCSS (plugins como tailwindcss y autoprefixer).
+- vite.config.js: Configuración de Vite para bundling y hot-reload.
+- package.json: Scripts `dev`, `build`, dependencias (tailwindcss, vite, autoprefixer).
+
+Otros archivos notables
+- phpunit.xml: Configuración de PHPUnit (suites, bootstrap, env vars para tests).
+- composer.lock: Versión exacta de dependencias instaladas.
+
+Guía rápida sobre qué hace cada tipo de archivo (esquema de responsabilidades)
+- `.php` en `app/Models`: Define estructura de datos, relaciones y scopes.
+- `.php` en `app/Http/Controllers`: Orquestan lógica entre Requests, Models y Views.
+- `.blade.php` en `resources/views`: Plantillas que renderizan HTML y usan variables/loops.
+- `.css`/`.js` en `resources`: Código fuente frontend que compila Vite a `public/build`.
+- `migrations`: Versionan la estructura de la DB, se ejecutan con `php artisan migrate`.
+- `seeders`: Poblan datos de ejemplo con `php artisan db:seed`.
+
+Siguientes opciones que puedo hacer (elige una):
+- Generar un árbol completo con TODOS los archivos del repo (muy verboso).
+- Añadir una línea por cada archivo real presente en carpetas seleccionadas (p. ej. `app/Http/Controllers`).
+- Exportar esto a Markdown para que puedas revisar en un PR.
+
+Fin del esquema detallado.

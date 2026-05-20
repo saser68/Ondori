@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos personalizados */
+@layer components {
+    .btn-primary {
+        @apply px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800;
+    }
+
+    .btn-secondary {
+        @apply px-6 py-2 border-2 border-black text-black rounded-lg hover:bg-black hover:text-white;
+    }
+
+    .card-shadow {
+        @apply shadow-md hover:shadow-lg;
+    }
+}
+
+/* Animaciones eliminadas: transiciones y keyframes quitados para simplificar el CSS */
+
+/* Estilos globales */
+html {
+    scroll-behavior: smooth;
+}
+
+/* TODO: Mejorar la paleta de colores para mejor contraste */
+body {
+    font-feature-settings: "kern";
+}
+

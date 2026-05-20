@@ -1,0 +1,41 @@
+// Dependencias
+/node_modules
+/vendor
+
+// Archivos de log
+*.log
+
+// Archivos del sistema
+.DS_Store
+Thumbs.db
+
+// IDE
+/.vscode
+/.idea
+/.fleet
+/.zed
+.phpactor.json
+
+// Ambiente
+.env
+.env.backup
+.env.production
+
+// Cache
+/.phpunit.cache
+/storage/framework/cache
+/storage/pail
+
+// Compilados
+/public/build
+/public/hot
+/storage/*.key
+
+// Auth
+/auth.json
+
+// Otros
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+
