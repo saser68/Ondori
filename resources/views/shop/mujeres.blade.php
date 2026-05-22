@@ -93,7 +93,7 @@
                     @forelse($productos as $producto)
                         <div class="product-card flex flex-col h-full">
                             <div class="product-image-container">
-                                <img src="{{ asset($producto->foto) }}" alt="{{ $producto->nombre }}" class="product-image">
+                                <img src="/{{ $producto->foto }}" alt="{{ $producto->nombre }}" class="product-image">
                             </div>
 
                             <h3 class="font-semibold text-lg mt-4">{{ $producto->nombre }}</h3>
