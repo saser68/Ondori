@@ -1,19 +1,35 @@
 # Nixpacks configuration for Railway deployment
-# Overrides the default Laravel build to skip view:cache, which requires
-# a database connection that is not available during the build phase.
+# Composer is explicitly included in nixPkgs so it is available on PATH
+# during the install phase. view:cache is deferred to the start command
+# because it requires a live database connection.
 
 [phases.setup]
-nixPkgs = ["php83", "php83Extensions.pdo", "php83Extensions.pdo_mysql", "php83Extensions.mbstring", "php83Extensions.tokenizer", "php83Extensions.xml", "php83Extensions.ctype", "php83Extensions.fileinfo", "php83Extensions.curl", "php83Extensions.zip", "php83Extensions.bcmath", "nodejs_20", "nodePackages.npm"]
+nixPkgs = [
+  "php83",
+  "php83Extensions.pdo",
+  "php83Extensions.pdo_mysql",
+  "php83Extensions.mbstring",
+  "php83Extensions.tokenizer",
+  "php83Extensions.xml",
+  "php83Extensions.ctype",
+  "php83Extensions.fileinfo",
+  "php83Extensions.curl",
+  "php83Extensions.zip",
+  "php83Extensions.bcmath",
+  "phpPackages.composer",
+  "nodejs_20",
+  "nodePackages.npm"
+]
 
 [phases.install]
 cmds = [
   "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist",
-  "npm ci",
-  "npm run build"
+  "npm ci"
 ]
 
 [phases.build]
 cmds = [
+  "npm run build",
   "php artisan config:cache",
   "php artisan route:cache",
   "php artisan event:cache"
