@@ -53,7 +53,7 @@ echo "[start] Running migrations..."
 php artisan migrate --force
 
 echo "[start] Caching views..."
-php artisan view:cache
+php artisan view:cache || echo "[start] Warning: view:cache failed (non-fatal) – continuing startup."
 
 echo "[start] Starting server on 0.0.0.0:${PORT:-8000}..."
 exec php artisan serve --host=0.0.0.0 --port="${PORT:-8000}"
