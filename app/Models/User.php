@@ -94,7 +94,7 @@ class User extends Authenticatable
      */
     public function getAuthPassword()
     {
-        return $this->Password;
+        return $this->password;
     }
 
     /**
@@ -105,7 +105,7 @@ class User extends Authenticatable
      */
     public function setPasswordAttribute($value)
     {
-        $this->attributes['Password'] = $value;
+        $this->attributes['password'] = $value;
     }
 
     /**
