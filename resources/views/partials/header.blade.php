@@ -15,7 +15,7 @@
                 <a href="#" class="text-gray-700 hover:text-gray-900 transition font-medium">Nueva Colección</a>
                 <a href="/mujeres" class="text-gray-700 hover:text-gray-900 transition font-medium">Mujer</a>
                 <a href="/hombres" class="text-gray-700 hover:text-gray-900 transition font-medium {{ request()->is('hombres*') ? 'text-gray-900 font-bold border-b-2 border-black' : '' }}">Hombre</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900 transition font-medium">Ofertas</a>
+                <a href="{{ route('ofertas') }}" class="text-gray-700 hover:text-gray-900 transition font-medium {{ request()->is('ofertas*') ? 'text-gray-900 font-bold border-b-2 border-black' : '' }}">Ofertas</a>
                 @auth
                     @if(auth()->user()->email === 'admin@ondori.com')
                         <a href="{{ route('admin.dashboard') }}" class="text-red-600 hover:text-red-700 transition font-medium">

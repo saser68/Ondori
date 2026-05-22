@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OfertasController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth; 
@@ -131,6 +132,14 @@ Route::get('/search', function () {
         'total' => $productos->count(),
     ]);
 })->name('search');
+
+/*
+|--------------------------------------------------------------------------
+| RUTA PARA LA SECCIÓN DE OFERTAS
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/ofertas', [OfertasController::class, 'index'])->name('ofertas');
 
 /*
 |--------------------------------------------------------------------------
