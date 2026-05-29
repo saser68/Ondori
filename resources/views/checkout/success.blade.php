@@ -7,10 +7,7 @@
         
         <!-- Success Message -->
         <div class="text-center mb-12">
-            <div class="text-6xl mb-6">🎉</div>
             <h1 class="text-4xl font-bold text-gray-900 mb-4">¡Pedido Confirmado!</h1>
-            <p class="text-xl text-gray-600 mb-2">{{ session('message') }}</p>
-            <p class="text-gray-500">Revisa tu email para todos los detalles de tu pedido</p>
         </div>
 
         <!-- Order Details -->

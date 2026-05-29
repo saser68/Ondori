@@ -1,0 +1,245 @@
+DESCRIPCION DE ARCHIVOS DEL PROYECTO ONDORI
+
+Este documento resume que hace cada archivo importante de la web.
+
+RUTAS
+
+routes/web.php
+Define las rutas principales de la web: pagina de inicio, colecciones de hombre y mujer, carrito, checkout, perfil y panel de administracion.
+
+routes/auth.php
+Define las rutas de autenticacion: login, registro, cerrar sesion, recuperar contrasena y verificar email.
+
+routes/console.php
+Archivo para definir comandos de consola de Laravel.
+
+
+CONTROLADORES
+
+app/Http/Controllers/CartController.php
+Gestiona el carrito de compras: mostrar carrito, anadir productos, actualizar cantidades, eliminar productos, vaciar carrito y procesar el checkout.
+
+app/Http/Controllers/ProfileController.php
+Gestiona el perfil del usuario: editar datos, actualizar informacion y eliminar la cuenta.
+
+app/Http/Controllers/Admin/AdminController.php
+Gestiona el panel de administracion: muestra estadisticas, usuarios, productos y permite crear, editar o eliminar usuarios/productos.
+
+app/Http/Controllers/Admin/PedidoController.php
+Gestiona los pedidos desde administracion: listar pedidos, ver detalles, cambiar estado, eliminar pedidos y ver estadisticas.
+
+app/Http/Controllers/Auth/AuthenticatedSessionController.php
+Controla el inicio y cierre de sesion. Muestra el login, autentica al usuario y destruye la sesion al cerrar sesion.
+
+app/Http/Controllers/Auth/RegisteredUserController.php
+Gestiona el registro de nuevos usuarios.
+
+app/Http/Controllers/Auth/RegisterController.php
+Controlador relacionado con el registro de usuarios.
+
+app/Http/Controllers/Auth/PasswordResetLinkController.php
+Gestiona el envio del enlace para restablecer la contrasena.
+
+app/Http/Controllers/Auth/NewPasswordController.php
+Permite guardar una nueva contrasena despues de usar el enlace de recuperacion.
+
+app/Http/Controllers/Auth/PasswordController.php
+Permite actualizar la contrasena del usuario autenticado.
+
+app/Http/Controllers/Auth/ConfirmablePasswordController.php
+Gestiona la confirmacion de contrasena para acciones protegidas.
+
+app/Http/Controllers/Auth/EmailVerificationPromptController.php
+Muestra la pantalla de verificacion de email.
+
+app/Http/Controllers/Auth/EmailVerificationNotificationController.php
+Gestiona el reenvio del correo de verificacion.
+
+app/Http/Controllers/Auth/VerifyEmailController.php
+Verifica el email del usuario cuando accede al enlace de verificacion.
+
+app/Http/Controllers/Controller.php
+Controlador base del que pueden heredar otros controladores.
+
+
+REQUESTS Y VALIDACIONES
+
+app/Http/Requests/Auth/LoginRequest.php
+Valida el email y la contrasena del login. Tambien comprueba las credenciales con Auth::attempt().
+
+app/Http/Requests/ProfileUpdateRequest.php
+Valida los datos cuando el usuario actualiza su perfil.
+
+
+MODELOS
+
+app/Models/Usuario.php
+Modelo principal de usuarios. Se usa para autenticacion, datos personales, contrasenas, direcciones y pedidos.
+
+app/Models/User.php
+Modelo de usuario alternativo siguiendo la estructura estandar de Laravel.
+
+app/Models/Hombre.php
+Modelo de productos de la tabla Hombre. Representa la coleccion de ropa masculina.
+
+app/Models/Mujer.php
+Modelo de productos de la tabla Mujer. Representa la coleccion de ropa femenina.
+
+app/Models/Oferta.php
+Modelo de productos en oferta.
+
+app/Models/Categoria.php
+Modelo de categorias de productos.
+
+app/Models/Pedido.php
+Modelo de pedidos. Relaciona un pedido con un usuario y con sus detalles.
+
+app/Models/PedidoDetalle.php
+Modelo de detalles de pedido. Guarda los productos comprados dentro de un pedido.
+
+app/Models/Direccion.php
+Modelo de direcciones asociadas a usuarios.
+
+app/Models/Administrador.php
+Modelo relacionado con administradores del sistema.
+
+
+CORREOS
+
+app/Mail/PurchaseConfirmation.php
+Clase usada para enviar el correo de confirmacion de compra.
+
+app/Mail/WelcomeEmail.php
+Clase usada para enviar un correo de bienvenida.
+
+resources/views/emails/purchase-confirmation.blade.php
+Plantilla del correo de confirmacion de compra.
+
+resources/views/emails/welcome.blade.php
+Plantilla del correo de bienvenida.
+
+
+VISTAS PRINCIPALES
+
+resources/views/welcome.blade.php
+Pagina principal de la web. Muestra productos destacados y la entrada a la tienda.
+
+resources/views/shop/hombres.blade.php
+Vista de la coleccion hombre. Muestra productos desde la base de datos, filtros y botones para ver o anadir al carrito.
+
+resources/views/shop/mujeres.blade.php
+Vista de la coleccion mujer. Muestra productos femeninos con filtros y acciones.
+
+resources/views/shop/vistaProducto.blade.php
+Vista de detalle de producto. Muestra imagen, nombre, descripcion, precio, color y tallas.
+
+resources/views/shop/carrito.blade.php
+Vista del carrito. Muestra productos anadidos, cantidades, precio, subtotal, impuestos y boton de checkout.
+
+resources/views/checkout/success.blade.php
+Pagina de exito despues de finalizar una compra.
+
+resources/views/profile.blade.php
+Vista del perfil del usuario. Muestra nombre, apellido, email, telefono y opcion para cambiar contrasena.
+
+resources/views/search/results.blade.php
+Vista de resultados de busqueda.
+
+
+VISTAS DE ADMINISTRACION
+
+resources/views/admin/dashboard.blade.php
+Panel de administracion. Permite gestionar productos y usuarios.
+
+resources/views/admin/users/edit.blade.php
+Formulario para editar datos de un usuario desde el panel de administracion.
+
+
+VISTAS DE AUTENTICACION
+
+resources/views/auth/login.blade.php
+Formulario de inicio de sesion.
+
+resources/views/auth/register.blade.php
+Formulario de registro de usuarios.
+
+resources/views/auth/forgot-password.blade.php
+Formulario para solicitar recuperacion de contrasena.
+
+resources/views/auth/reset-password.blade.php
+Formulario para guardar una nueva contrasena.
+
+resources/views/auth/confirm-password.blade.php
+Vista para confirmar la contrasena.
+
+resources/views/auth/verify-email.blade.php
+Vista para verificar el correo electronico.
+
+resources/views/auth/profile.blade.php
+Vista relacionada con el perfil dentro de autenticacion.
+
+
+LAYOUTS, PARTIALS Y COMPONENTES
+
+resources/views/layouts/app.blade.php
+Layout principal de la web. Define la estructura comun de las paginas.
+
+resources/views/layouts/guest.blade.php
+Layout usado para paginas de invitado, como login o registro.
+
+resources/views/layouts/navigation.blade.php
+Barra de navegacion de la aplicacion.
+
+resources/views/partials/header.blade.php
+Cabecera reutilizable de la web.
+
+resources/views/partials/footer.blade.php
+Pie de pagina reutilizable.
+
+resources/views/components/application-logo.blade.php
+Componente del logo de la aplicacion.
+
+resources/views/components/guest-layout.blade.php
+Componente de layout para paginas de invitado.
+
+resources/views/components/text-input.blade.php
+Componente reutilizable para campos de texto.
+
+resources/views/components/input-label.blade.php
+Componente reutilizable para etiquetas de formulario.
+
+resources/views/components/input-error.blade.php
+Componente para mostrar errores de validacion.
+
+resources/views/components/primary-button.blade.php
+Componente reutilizable para botones principales.
+
+resources/views/components/auth-session-status.blade.php
+Componente para mostrar mensajes de estado en autenticacion.
+
+
+MIGRACIONES Y BASE DE DATOS
+
+database/migrations/0001_01_01_000000_create_users_table.php
+Migracion que crea la tabla users, tokens de recuperacion de contrasena y sesiones.
+
+database/migrations/0001_01_01_000001_create_cache_table.php
+Migracion que crea tablas relacionadas con cache.
+
+database/migrations/0001_01_01_000002_create_jobs_table.php
+Migracion que crea tablas para trabajos en cola.
+
+BD/ONDORI.sql
+Archivo SQL con la estructura y datos de la base de datos del proyecto.
+
+
+PROVEEDORES Y COMPONENTES PHP
+
+app/Providers/AppServiceProvider.php
+Proveedor principal de Laravel para configurar servicios de la aplicacion.
+
+app/View/Components/AppLayout.php
+Clase PHP del componente de layout principal.
+
+app/View/Components/GuestLayout.php
+Clase PHP del componente de layout para invitados.

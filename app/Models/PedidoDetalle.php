@@ -32,6 +32,8 @@ class PedidoDetalle extends Model
     }
 
     // Obtener el producto dinámicamente según la tabla de origen
+    // Nota: Esta relación no funciona con eager loading directo debido a que cambia según Tabla_Origen
+    // Para eager loading, usar las relaciones específicas: productoHombre, productoMujer, productoOferta
     public function producto()
     {
         switch ($this->Tabla_Origen) {
@@ -44,6 +46,22 @@ class PedidoDetalle extends Model
             default:
                 return null;
         }
+    }
+
+    // Relaciones específicas para eager loading
+    public function productoHombre()
+    {
+        return $this->belongsTo(Hombre::class, 'ID_Producto', 'id_producto');
+    }
+
+    public function productoMujer()
+    {
+        return $this->belongsTo(Mujer::class, 'ID_Producto', 'id_producto');
+    }
+
+    public function productoOferta()
+    {
+        return $this->belongsTo(Oferta::class, 'ID_Producto', 'id_producto');
     }
 
     // Tablas de origen posibles

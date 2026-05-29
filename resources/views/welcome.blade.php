@@ -175,7 +175,7 @@
 
     <main>
 
-        <!-- Hero Section -->
+        {{-- hero section con imagen grande y llamada a la coleccion --}}
         <section class="hero-section">
             <div class="hero-image">
                 <img src="{{ asset('img/Menu/tienda.png') }}" alt="Tienda Ondori">
@@ -200,7 +200,7 @@
             </div>
         </section>
 
-        <!-- Featured Products -->
+        {{-- featured products que vienen del controlador --}}
         <section id="productos-destacados" class="py-20 px-4 bg-gray-50">
             <div class="max-w-7xl mx-auto">
                 <h2 class="text-4xl font-bold text-center mb-4">Productos Destacados</h2>
@@ -210,6 +210,7 @@
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     @forelse($productos as $producto)
+                        {{-- tarjeta de producto con overlay y boton de carrito --}}
                         <div class="product-card bg-white rounded-xl shadow-sm overflow-hidden">
                             <div class="product-image-container relative">
                                 <img src="{{ asset($producto->foto) }}" alt="{{ $producto->nombre }}" class="product-image">
@@ -217,6 +218,7 @@
                                     <form action="{{ route('cart.add') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="product_id" value="{{ $producto->id_producto }}">
+                                        <input type="hidden" name="product_table" value="Hombre">
                                         <input type="hidden" name="product_name" value="{{ $producto->nombre }}">
                                         <input type="hidden" name="product_price" value="{{ $producto->precio }}">
                                         <input type="hidden" name="product_image" value="{{ $producto->foto }}">

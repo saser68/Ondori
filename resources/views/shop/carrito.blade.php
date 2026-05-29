@@ -5,7 +5,7 @@
 @section('content')
     <main class="max-w-7xl mx-auto px-4 pt-24 pb-8">
         
-        <!-- Título del Carrito -->
+        <!-- titulo del carrito -->
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Mi Carrito</h1>
             <p class="text-gray-600">Última oportunidad para revisar antes de checkout</p>
@@ -17,14 +17,20 @@
             </div>
         @endif
 
-        <!-- Contenido del Carrito -->
+        @if(session('error'))
+            <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+                <p class="text-red-600">{{ session('error') }}</p>
+            </div>
+        @endif
+
+        <!-- contenido del carrito -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <!-- Lista de Productos -->
+            <!-- lista de productos -->
             <div class="lg:col-span-2">
                 
                 @if(empty($cart))
-                    <!-- Carrito Vacío -->
+                    <!-- carrito vacio -->
                     <div class="bg-white rounded-lg shadow-sm p-12 text-center">
                         <i class="fas fa-shopping-cart text-6xl text-gray-300 mb-4"></i>
                         <h3 class="text-xl font-semibold text-gray-900 mb-2">Tu carrito está vacío</h3>
@@ -35,7 +41,7 @@
                         </a>
                     </div>
                 @else
-                    <!-- Lista de Productos del Carrito -->
+                    <!-- lista de productos del carrito -->
                     @foreach($cart as $productId => $item)
                     <div class="cart-item bg-white rounded-lg shadow-sm p-6 mb-4 hover:shadow-md transition">
                         <div class="flex items-center gap-4">
@@ -69,7 +75,7 @@
                     </div>
                     @endforeach
 
-                    <!-- Seguir Comprando -->
+                    <!-- seguir comprando -->
                     <div class="mt-6">
                         <a href="/" class="inline-flex items-center text-gray-600 hover:text-gray-900 transition">
                             <i class="fas fa-arrow-left mr-2"></i>
@@ -80,7 +86,7 @@
 
             </div>
 
-            <!-- Resumen del Pedido -->
+            <!-- resumen del pedido -->
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-lg shadow-sm p-6 sticky top-24">
                     <h2 class="text-xl font-bold text-gray-900 mb-6">Resumen del Pedido</h2>
@@ -107,7 +113,7 @@
                         </div>
                     </div>
 
-                    <!-- Código de Descuento -->
+                    <!-- codigo de descuento -->
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Código de descuento</label>
                         <div class="flex gap-2">

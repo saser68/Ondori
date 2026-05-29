@@ -1,3 +1,4 @@
+{{-- nota: esta vista tiene comentario agregado manual --}}
 <div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col md:flex-row gap-8">
         

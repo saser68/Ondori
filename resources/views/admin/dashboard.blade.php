@@ -14,6 +14,23 @@
             <p class="text-green-600">{{ session('success') }}</p>
         </div>
     @endif
+
+    @if(session('error'))
+        <div class="mb-6 bg-red-50 border border-red-200 rounded-md p-4">
+            <p class="text-red-600">{{ session('error') }}</p>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="mb-6 bg-red-50 border border-red-200 rounded-md p-4">
+            <p class="font-semibold text-red-700 mb-2">No se pudo guardar el producto:</p>
+            <ul class="list-disc pl-5 text-red-600">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     
     <!-- Tabs de navegación -->
     <div class="bg-white rounded-lg shadow-lg mb-6">
@@ -65,30 +82,24 @@
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Ropa</label>
-                            <input type="text" name="tipoRopa" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="Ej: Sudadera, Camiseta, Vestido">
+                            <input type="text" name="tipoRopa" data-specific-field class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="Ej: Sudadera, Camiseta, Vestido">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Color</label>
-                            <input type="text" name="color" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="Ej: Negro, Blanco, Azul">
+                            <input type="text" name="color" data-specific-field class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="Ej: Negro, Blanco, Azul">
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Talla</label>
-                            <input type="text" name="talla" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="Ej: S, M, L, XL">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Precio (€)</label>
-                            <input type="number" name="precio" step="0.01" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="29.99" required>
-                        </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Talla</label>
+                        <input type="text" name="talla" data-specific-field class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="Ej: S, M, L, XL">
                     </div>
                 </div>
                 
-                <!-- Precio para ofertas (se muestra solo cuando se selecciona ofertas) -->
-                <div id="ofertaPrice" class="hidden mb-4">
+                <!-- Precio -->
+                <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Precio (€)</label>
-                    <input type="number" name="precio" step="0.01" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="19.99" required>
+                    <input type="number" name="precio" step="0.01" min="0" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="29.99" required>
                 </div>
                 
                 <!-- Stock -->
@@ -141,7 +152,7 @@
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $usuario->ID_USUario }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $usuario->Nombre }} {{ $usuario->Apellido }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $usuario->Email }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $usuario->email }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $usuario->Telefono ?? 'No especificado' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <button onclick="editUser({{ $usuario->ID_USUario }})" class="text-indigo-600 hover:text-indigo-900 mr-3">Editar</button>
@@ -225,17 +236,17 @@ function showTab(tabName) {
 // Mostrar/ocultar campos según categoría
 document.querySelector('select[name="category"]').addEventListener('change', function() {
     const specificFields = document.getElementById('specificFields');
-    const ofertaPrice = document.getElementById('ofertaPrice');
+    const specificInputs = document.querySelectorAll('[data-specific-field]');
     
     if (this.value === 'ofertas') {
         specificFields.classList.add('hidden');
-        ofertaPrice.classList.remove('hidden');
+        specificInputs.forEach(input => input.disabled = true);
     } else if (this.value === 'hombre' || this.value === 'mujer') {
         specificFields.classList.remove('hidden');
-        ofertaPrice.classList.add('hidden');
+        specificInputs.forEach(input => input.disabled = false);
     } else {
         specificFields.classList.add('hidden');
-        ofertaPrice.classList.add('hidden');
+        specificInputs.forEach(input => input.disabled = true);
     }
 });
 
@@ -275,6 +286,7 @@ function deleteUser(userId) {
 // Inicializar con la pestaña de productos activa
 document.addEventListener('DOMContentLoaded', function() {
     showTab('products');
+    document.querySelector('select[name="category"]').dispatchEvent(new Event('change'));
 });
 </script>
 @endsection

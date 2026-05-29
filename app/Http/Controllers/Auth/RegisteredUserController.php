@@ -32,8 +32,8 @@ class RegisteredUserController extends Controller
         $request->validate([
             'nombre' => ['required', 'string', 'max:100'],
             'apellido' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'string', 'email', 'max:150', 'unique:'.Usuario::class.',Email'],
-            'telefono' => ['nullable', 'string', 'max:20', 'unique:'.Usuario::class.',Telefono'],
+            'email' => ['required', 'string', 'email', 'max:150', 'unique:Usuarios,Email'],
+            'telefono' => ['nullable', 'string', 'max:20', 'unique:Usuarios,Telefono'],
             'password' => ['required', 'string', 'min:6', 'confirmed', 'regex:/^(?=.*\d).+$/'],
         ], [
             'password.regex' => 'La contraseña debe tener al menos 6 caracteres y contener al menos un número.',

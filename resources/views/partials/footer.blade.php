@@ -1,9 +1,9 @@
-<!-- Footer de la página -->
+<!-- footer de la pagina -->
 <footer class="bg-gray-900 text-white py-12 mt-20">
     <div class="max-w-7xl mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             
-            <!-- Sobre Ondori -->
+            <!-- sobre ondori -->
             <div>
                 <h3 class="text-lg font-bold mb-4">Ondori</h3>
                 <p class="text-gray-400 mb-4">Tu tienda de moda urbana y contemporánea. Estilo que define.</p>
@@ -20,7 +20,7 @@
                 </div>
             </div>
             
-            <!-- Enlaces rápidos -->
+            <!-- enlaces rapidos -->
             <div>
                 <h3 class="text-lg font-bold mb-4">Enlaces</h3>
                 <ul class="space-y-2">
@@ -31,7 +31,7 @@
                 </ul>
             </div>
             
-            <!-- Ayuda -->
+            <!-- ayuda -->
             <div>
                 <h3 class="text-lg font-bold mb-4">Ayuda</h3>
                 <ul class="space-y-2">
@@ -42,7 +42,7 @@
                 </ul>
             </div>
             
-            <!-- Contacto -->
+            <!-- contacto -->
             <div>
                 <h3 class="text-lg font-bold mb-4">Contacto</h3>
                 <ul class="space-y-2 text-gray-400">

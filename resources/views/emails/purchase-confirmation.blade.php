@@ -170,7 +170,6 @@
 
         <!-- Content -->
         <div class="content">
-            <div class="success-emoji">🎉</div>
             
             <div class="order-info">
                 <div class="order-number">Pedido #{{ $order['id'] ?? 'ORD-' . date('YmdHis') }}</div>

@@ -26,6 +26,12 @@ class Usuario extends Authenticatable
         'Password'
     ];
 
+    // Accessor para name (mapear Nombre + Apellido)
+    public function getNameAttribute()
+    {
+        return $this->Nombre . ' ' . $this->Apellido;
+    }
+
     // Mapear campos de BD a propiedades de Laravel
     public function getAuthPassword()
     {

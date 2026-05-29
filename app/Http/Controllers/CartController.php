@@ -2,13 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hombre;
+use App\Models\Mujer;
+use App\Models\Oferta;
+use App\Models\Pedido;
+use App\Models\PedidoDetalle;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\PurchaseConfirmation;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class CartController extends Controller
 {
+    private const PRODUCT_MODELS = [
+        'Hombre' => Hombre::class,
+        'Mujer' => Mujer::class,
+        'Ofertas' => Oferta::class,
+    ];
+
     /**
      * Mostrar el carrito de compras
      */
@@ -26,23 +38,41 @@ class CartController extends Controller
      */
     public function add(Request $request)
     {
-        $id = $request->input('product_id');
-        $name = $request->input('product_name');
-        $price = (float) $request->input('product_price');
-        $image = $request->input('product_image');
+        $request->validate([
+            'product_id' => 'required|integer|min:1',
+            'product_table' => 'nullable|string',
+            'quantity' => 'nullable|integer|min:1',
+        ]);
+
+        $id = (int) $request->input('product_id');
+        $table = $this->normalizeProductTable($request->input('product_table'));
         $qty = (int) $request->input('quantity', 1);
+        $model = self::PRODUCT_MODELS[$table];
+        $product = $model::find($id);
+
+        if (!$product) {
+            return redirect()->back()->with('error', 'Producto no encontrado');
+        }
 
         $cart = session()->get('cart', []);
+        $cartKey = $this->cartKey($table, $id);
+        $currentQty = $cart[$cartKey]['quantity'] ?? 0;
+
+        if (($currentQty + $qty) > $product->stock) {
+            return redirect()->back()->with('error', 'No hay suficiente stock disponible');
+        }
 
         // Si el producto ya existe en el carrito, incrementar cantidad
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity'] += $qty;
+        if (isset($cart[$cartKey])) {
+            $cart[$cartKey]['quantity'] += $qty;
         } else {
             // Nuevo producto
-            $cart[$id] = [
-                'name' => $name,
-                'price' => $price,
-                'image' => $image,
+            $cart[$cartKey] = [
+                'id' => $id,
+                'table' => $table,
+                'name' => $product->nombre,
+                'price' => (float) $product->precio,
+                'image' => $product->foto,
                 'quantity' => $qty
             ];
         }
@@ -58,7 +88,7 @@ class CartController extends Controller
     public function update(Request $request)
     {
         $productId = $request->input('product_id');
-        $quantity = $request->input('quantity');
+        $quantity = (int) $request->input('quantity');
 
         if ($quantity <= 0) {
             return $this->remove($request);
@@ -67,6 +97,20 @@ class CartController extends Controller
         $cart = session()->get('cart', []);
 
         if (isset($cart[$productId])) {
+            $item = $cart[$productId];
+            $table = $this->normalizeProductTable($item['table'] ?? null);
+            $model = self::PRODUCT_MODELS[$table];
+            $realProductId = (int) ($item['id'] ?? $productId);
+            $product = $model::find($realProductId);
+
+            if (!$product) {
+                return redirect()->back()->with('error', 'Producto no encontrado');
+            }
+
+            if ($quantity > $product->stock) {
+                return redirect()->back()->with('error', 'No hay suficiente stock disponible');
+            }
+
             $cart[$productId]['quantity'] = $quantity;
             session()->put('cart', $cart);
         }
@@ -130,22 +174,56 @@ class CartController extends Controller
         $tax = $total * 0.21;
         $grandTotal = $total + $tax;
 
-        // Crear datos del pedido
-        $order = [
-            'id' => 'ORD-' . date('YmdHis') . '-' . $user->ID_USUario,
-            'subtotal' => $total,
-            'tax' => $tax,
-            'total' => $grandTotal,
-            'shipping' => 'Gratis',
-            'address' => $request->input('address', 'Tu dirección registrada'),
-            'payment_method' => $request->input('payment_method', 'Tarjeta')
-        ];
+        try {
+            $order = DB::transaction(function () use ($cart, $user, $total, $tax, $grandTotal, $request) {
+                $pedido = Pedido::create([
+                    'ID_Usuario' => $user->ID_USUario,
+                    'Total' => $grandTotal,
+                    'Estado' => 'Pagado',
+                ]);
+
+                foreach ($cart as $cartKey => $item) {
+                    $table = $this->normalizeProductTable($item['table'] ?? null);
+                    $model = self::PRODUCT_MODELS[$table];
+                    $productId = (int) ($item['id'] ?? $cartKey);
+                    $quantity = (int) $item['quantity'];
+
+                    $updated = $model::where('id_producto', $productId)
+                        ->where('stock', '>=', $quantity)
+                        ->decrement('stock', $quantity);
+
+                    if ($updated === 0) {
+                        throw new \RuntimeException('No hay suficiente stock para ' . ($item['name'] ?? 'el producto seleccionado'));
+                    }
+
+                    PedidoDetalle::create([
+                        'ID_Pedido' => $pedido->ID_Pedido,
+                        'ID_Producto' => $productId,
+                        'Tabla_Origen' => $table,
+                        'Cantidad' => $quantity,
+                        'Precio_Unitario' => (float) $item['price'],
+                    ]);
+                }
+
+                return [
+                    'id' => 'ORD-' . $pedido->ID_Pedido,
+                    'subtotal' => $total,
+                    'tax' => $tax,
+                    'total' => $grandTotal,
+                    'shipping' => 'Gratis',
+                    'address' => $request->input('address', 'Tu dirección registrada'),
+                    'payment_method' => $request->input('payment_method', 'Tarjeta')
+                ];
+            });
+        } catch (\RuntimeException $e) {
+            return redirect('/carrito')->with('error', $e->getMessage());
+        }
 
         // Enviar email de confirmación
         try {
-            Mail::to($user->getEmailAttribute())->send(new PurchaseConfirmation($user, $order, $cart));
-        } catch (\Exception $e) {
-            \Log::error('Error enviando email de confirmación: ' . $e->getMessage());
+            Mail::to($user->Email)->send(new PurchaseConfirmation($user, $order, $cart));
+        } catch (\Throwable $e) {
+            Log::error('Error enviando email de confirmación: ' . $e->getMessage());
         }
 
         // Vaciar el carrito
@@ -153,8 +231,7 @@ class CartController extends Controller
 
         // Redirigir a página de éxito
         return redirect('/checkout/success')->with([
-            'order' => $order,
-            'message' => '¡Pedido procesado exitosamente! Revisa tu email para los detalles.'
+            'order' => $order
         ]);
     }
 
@@ -181,5 +258,19 @@ class CartController extends Controller
             $count += $item['quantity'];
         }
         return $count;
+    }
+
+    private function normalizeProductTable(?string $table): string
+    {
+        return match (strtolower((string) $table)) {
+            'mujer', 'mujeres' => 'Mujer',
+            'oferta', 'ofertas' => 'Ofertas',
+            default => 'Hombre',
+        };
+    }
+
+    private function cartKey(string $table, int $id): string
+    {
+        return $table . ':' . $id;
     }
 }

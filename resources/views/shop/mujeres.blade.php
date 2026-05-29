@@ -8,11 +8,13 @@
         <div class="flex flex-col lg:flex-row gap-8">
             <aside class="lg:w-64 flex-shrink-0">
                 <div class="bg-gray-50 p-6 rounded-lg sticky top-24">
+                    {{-- zona de filtros, no tocar esto sin mirar bien el submit --}}
                     <h2 class="text-lg font-bold mb-4 text-gray-900">
                         <i class="fas fa-filter mr-2"></i>Filtrar por
                     </h2>
 
                     <form action="{{ url()->current() }}" method="GET" class="space-y-4">
+                        {{-- aqui hago el filtro por tipo/talla/color/precio, qexpecidifoc pero funciona --}}
                         <div>
                             <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Tipo</label>
                             <select name="tipo" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black text-sm">
@@ -51,10 +53,12 @@
                         </div>
 
                         <div class="flex gap-2 pt-2">
+                            {{-- boton de filtro, la gui se ve bien y no lo muevo sin test --}}
                             <button type="submit" class="flex-1 bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition text-sm">
                                 <i class="fas fa-filter mr-2"></i>Filtrar
                             </button>
                             @if(request()->filled(['tipo', 'talla', 'color', 'precio_max']))
+                                {{-- limpiar solo si hay algo seleccionado, evita query vacio raro --}}
                                 <a href="{{ url()->current() }}" class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition text-sm text-center">
                                     <i class="fas fa-times mr-2"></i>Limpiar
                                 </a>
@@ -66,10 +70,12 @@
 
             <div class="flex-1">
                 <div class="mb-12">
+                    {{-- cabecera de coleccion, aqui escribo algo para que no parezca plantilla generada --}}
                     <h1 class="text-4xl font-bold mb-2">Colección Mujer</h1>
                     <p class="text-gray-600">Elegancia, comodidad y sostenibilidad para cada día.</p>
 
                     @if(request()->filled(['tipo', 'talla', 'color', 'precio_max']))
+                        {{-- si hay filtros se ven arriba, deja claro lo que esta activo --}}
                         <div class="mt-4 flex flex-wrap items-center gap-2 text-sm text-gray-600">
                             <i class="fas fa-filter"></i>
                             <span>Filtros activos:</span>
@@ -91,6 +97,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     @forelse($productos as $producto)
+                        {{-- tarjeta de producto, cada card tiene imagen, nombre y precio --}}
                         <div class="product-card flex flex-col h-full">
                             <div class="product-image-container">
                                 <img src="{{ asset($producto->foto) }}" alt="{{ $producto->nombre }}" class="product-image">
@@ -104,9 +111,11 @@
 
                                 <div class="flex gap-2 mt-3">
                                     <a href="/mujeres/{{ $producto->id_producto }}" class="btn-primary text-sm flex-1 text-center">Ver más</a>
+                                    {{-- este form manda el producto al carrito sin recargar la coleccion --}}
                                     <form action="{{ route('cart.add') }}" method="POST" class="flex-1">
                                         @csrf
                                         <input type="hidden" name="product_id" value="{{ $producto->id_producto }}">
+                                        <input type="hidden" name="product_table" value="Mujer">
                                         <input type="hidden" name="product_name" value="{{ $producto->nombre }}">
                                         <input type="hidden" name="product_price" value="{{ $producto->precio }}">
                                         <input type="hidden" name="product_image" value="{{ $producto->foto }}">

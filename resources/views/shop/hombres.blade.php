@@ -4,23 +4,23 @@
 
 @section('content')
 
-    <!-- Contenido principal -->
+    <!-- contenido principal -->
 <main class="py-12">
         <div class="max-w-7xl mx-auto px-4">
-            <!-- Estructura con sidebar para filtros -->
+            <!-- estructura con sidebar para filtros -->
             <div class="flex flex-col lg:flex-row gap-8">
                 
-                <!-- Filtros laterales -->
+                <!-- filtros laterales -->
                 <aside class="lg:w-64 flex-shrink-0">
-                    <!-- Sticky para mejor UX al scroll -->
+                    <!-- sticky para mejor ux al scroll -->
                     <div class="bg-gray-50 p-6 rounded-lg sticky top-24">
                         <h2 class="text-lg font-bold mb-4 text-gray-900">
                             <i class="fas fa-filter mr-2"></i>Filtrar por
                         </h2>
                         
-                        <!-- Formulario de filtros GET -->
+                        <!-- formulario de filtros get -->
                         <form action="{{ url()->current() }}" method="GET" class="space-y-4">
-                            <!-- Tipo de prenda -->
+                            <!-- tipo de prenda -->
                             <div>
                                 <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Tipo</label>
                                 <select name="tipo" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black text-sm">
@@ -31,7 +31,7 @@
                                 </select>
                             </div>
 
-                            <!-- Talla -->
+                            <!-- talla -->
                             <div>
                                 <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Talla</label>
                                 <select name="talla" class="w-full border-gray-300 rounded-md shadow-sm text-sm">
@@ -43,7 +43,7 @@
                                 </select>
                             </div>
 
-                            <!-- Color -->
+                            <!-- color -->
                             <div>
                                 <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Color</label>
                                 <select name="color" class="w-full border-gray-300 rounded-md shadow-sm">
@@ -56,7 +56,7 @@
                                 </select>
                             </div>
 
-                            <!-- FILTRO POR PRECIO MÁXIMO -->
+                            <!-- filtro por precio maximo -->
                             <div>
                                 <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Precio Máx (€)</label>
                                 <!-- Mantiene el valor ingresado usando request('precio_max') -->
@@ -65,13 +65,13 @@
                                        class="w-full border-gray-300 rounded-md shadow-sm">
                             </div>
 
-                            <!-- BOTONES DE ACCIÓN -->
+                            <!-- botones de accion -->
                             <div class="flex gap-2 pt-2">
-                                <!-- Botón principal para aplicar filtros -->
+                                <!-- boton principal para aplicar filtros -->
                                 <button type="submit" class="flex-1 bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition text-sm">
                                     <i class="fas fa-filter mr-2"></i>Filtrar
                                 </button>
-                                <!-- Botón "Limpiar" aparece solo si hay filtros activos -->
+                                <!-- boton limpiar aparece solo si hay filtros activos -->
                                 @if(request()->filled(['tipo', 'talla', 'color', 'precio_max']))
                                     <a href="{{ url()->current() }}" class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition text-sm text-center">
                                         <i class="fas fa-times mr-2"></i>Limpiar
@@ -82,19 +82,19 @@
                     </div>
                 </aside>
 
-                <!-- CONTENIDO PRINCIPAL (Lista de productos) -->
+                <!-- contenido principal lista de productos -->
                 <div class="flex-1">
-                    <!-- Título y descripción de la sección -->
+                    <!-- titulo y descripcion de la seccion -->
                     <div class="mb-12">
                         <h1 class="text-4xl font-bold mb-2">Colección Hombre</h1>
-                        <p class="text-gray-600">Explora lo último en moda masculina de nuestra base de datos.</p>
+                        <p class="text-gray-600">Explora lo último en moda masculina.</p>
                         
-                        <!-- INDICADOR DE FILTROS ACTIVOS -->
+                        <!-- indicador de filtros activos -->
                         @if(request()->filled(['tipo', 'talla', 'color', 'precio_max']))
                             <div class="mt-4 flex items-center gap-2 text-sm text-gray-600">
                                 <i class="fas fa-filter"></i>
                                 <span>Filtros activos:</span>
-                                <!-- Muestra cada filtro activo como una etiqueta -->
+                                <!-- muestra cada filtro activo como etiqueta -->
                                 @if(request('tipo'))
                                     <span class="bg-gray-200 px-2 py-1 rounded">{{ request('tipo') }}</span>
                                 @endif
@@ -111,10 +111,10 @@
                         @endif
                     </div>
 
-                    <!-- GRID DE PRODUCTOS (3 columnas en desktop, 2 en tablet, 1 en móvil) -->
+                    <!-- grid de productos adaptativo en desktop y movil -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 
-                {{-- BUCLE DE PRODUCTOS: Recorre todos los productos obtenidos de la base de datos --}}
+                {{-- bucle de productos, recorre todos los productos de la base de datos --}}
                 @forelse($productos as $producto)
                     <!-- Tarjeta individual de producto con flexbox para alinear botones -->
                     <div class="product-card flex flex-col h-full">
@@ -145,6 +145,7 @@
                                 <form action="{{ route('cart.add') }}" method="POST" class="flex-1">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $producto->id_producto }}">
+                                    <input type="hidden" name="product_table" value="Hombre">
                                     <input type="hidden" name="product_name" value="{{ $producto->nombre }}">
                                     <input type="hidden" name="product_price" value="{{ $producto->precio }}">
                                     <input type="hidden" name="product_image" value="{{ $producto->foto }}">

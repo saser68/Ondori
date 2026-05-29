@@ -21,7 +21,7 @@ class PedidoController extends Controller
             abort(403, 'No autorizado');
         }
 
-        $pedidos = Pedido::with(['usuario', 'detalles.producto'])
+        $pedidos = Pedido::with(['usuario', 'detalles.productoHombre', 'detalles.productoMujer', 'detalles.productoOferta'])
             ->orderBy('Fecha', 'desc')
             ->paginate(10);
 
@@ -34,7 +34,7 @@ class PedidoController extends Controller
             abort(403, 'No autorizado');
         }
 
-        $pedido = Pedido::with(['usuario', 'detalles.producto'])
+        $pedido = Pedido::with(['usuario', 'detalles.productoHombre', 'detalles.productoMujer', 'detalles.productoOferta'])
             ->findOrFail($id);
 
         return view('admin.pedidos.show', compact('pedido'));

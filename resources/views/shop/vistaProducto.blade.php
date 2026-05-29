@@ -45,11 +45,12 @@
 </head>
 
 <body class="bg-white text-gray-900">
+    {{-- plantilla de producto individual con imagen, detalle y tallas --}}
 
     <header class="w-full bg-white border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex flex-col gap-4 md:flex-row md:justify-between md:items-center h-auto md:h-16">
-                <a href="/hombres" class="text-gray-500 hover:text-black transition inline-flex items-center">
+                <a href="{{ $backUrl ?? url('/hombres') }}" class="text-gray-500 hover:text-black transition inline-flex items-center">
                     <i class="fas fa-arrow-left mr-2"></i> Volver a la colección
                 </a>
                 <a href="/" class="font-bold text-2xl tracking-tight">Ondori</a>
@@ -61,6 +62,7 @@
     </header>
 
     <main class="py-12 max-w-7xl mx-auto px-4">
+        {{-- cuerpo principal con imagen y detalles del producto --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
             
             <div class="sticky top-24">
@@ -70,8 +72,8 @@
             <div class="flex flex-col space-y-6">
                 <div>
                     <div class="flex gap-2 mb-4">
-                        <span class="badge">{{ $producto->tipoRopa }}</span>
-                        <span class="badge">{{ $producto->color }}</span>
+                        <span class="badge">{{ $producto->tipoRopa ?? 'Oferta' }}</span>
+                        <span class="badge">{{ $producto->color ?? 'Ondori' }}</span>
                     </div>
                     <h1 class="text-4xl font-bold mb-2">{{ $producto->nombre }}</h1>
                     <p class="text-2xl font-light text-gray-800">€{{ number_format($producto->precio, 2) }}</p>
@@ -86,6 +88,7 @@
 
                 <div>
                     <label class="block text-sm font-bold uppercase mb-3">Selecciona tu Talla</label>
+                    {{-- tallas separadas por comas, se muestran como botones --}}
                     <div class="flex gap-3">
                         @foreach(explode(',', $producto->talla) as $t)
                             <button class="border-2 border-gray-200 hover:border-black w-12 h-12 flex items-center justify-center font-bold transition rounded">
@@ -95,19 +98,24 @@
                     </div>
                 </div>
 
-                <div class="pt-4">
-                    <button class="btn-buy shadow-xl">
+                <form action="{{ route('cart.add') }}" method="POST" class="pt-4">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $producto->id_producto }}">
+                    <input type="hidden" name="product_table" value="{{ $productTable ?? 'Hombre' }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn-buy shadow-xl">
                         AÑADIR AL CARRITO
                     </button>
                     <p class="text-center text-xs text-gray-400 mt-4">
                         <i class="fas fa-truck mr-1"></i> Envío gratuito en pedidos superiores a 50€
                     </p>
-                </div>
+                </form>
             </div>
 
         </div>
     </main>
 
+    {{-- footer minimal para la vista de producto --}}
     <footer class="bg-gray-900 text-white py-8 mt-20 text-center">
         <p class="text-gray-400 text-sm">&copy; 2026 Ondori. Calidad Garantizada.</p>
     </footer>

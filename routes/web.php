@@ -25,21 +25,12 @@ Route::get('/', function () {
 // ============================================
 
 Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth'])
     ->name('dashboard');
 
 // ============================================
 // AUTENTICACIÓN
 // ============================================
-
-// Ruta de logout
-Route::post('/logout', function () {
-    Auth::logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    
-    return redirect('/');
-})->name('logout')->middleware('auth');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', function () {
@@ -79,7 +70,10 @@ Route::get('/vistaProducto/{id}', function ($id) {
         abort(404);
     }
     
-    return view('shop.vistaProducto', ['producto' => $producto]);
+    return view('shop.vistaProducto', [
+        'producto' => $producto,
+        'productTable' => 'Hombre',
+    ]);
 });
 
 Route::get('/search', function () {
@@ -179,6 +173,7 @@ Route::get('/hombres/{id}', function ($id) {
     return view('shop.vistaProducto', [
         'producto' => $producto,
         'backUrl' => url('/hombres'),
+        'productTable' => 'Hombre',
     ]);
 });
 
@@ -193,6 +188,7 @@ Route::get('/mujeres/{id}', function ($id) {
     return view('shop.vistaProducto', [
         'producto' => $producto,
         'backUrl' => url('/mujeres'),
+        'productTable' => 'Mujer',
     ]);
 });
 

@@ -39,7 +39,7 @@
                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                    <input type="email" name="email" value="{{ $usuario->Email }}" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" required>
+                    <input type="email" name="email" value="{{ $usuario->email }}" class="w-full p-3 border border-gray-300 rounded-md focus:ring-black focus:border-black" required>
                 </div>
                 
                 <div>
@@ -59,7 +59,7 @@
                     <div>
                         <span class="text-gray-600">Tipo de Usuario:</span>
                         <span class="font-medium">
-                            @if($usuario->Email === 'admin@ondori.com')
+                            @if($usuario->email === 'admin@ondori.com')
                                 Administrador
                             @else
                                 Cliente
@@ -77,7 +77,7 @@
                 <a href="{{ route('admin.dashboard') }}" class="bg-gray-200 text-gray-700 px-6 py-3 rounded-md hover:bg-gray-300 transition">
                     Cancelar
                 </a>
-                @if($usuario->Email !== 'admin@ondori.com')
+                @if($usuario->email !== 'admin@ondori.com')
                     <button type="button" onclick="confirmDelete({{ $usuario->ID_USUario }})" class="bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700 transition">
                         Eliminar Usuario
                     </button>

@@ -12,6 +12,7 @@ use App\Models\Pedido;
 use App\Models\PedidoDetalle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class AdminController extends Controller
 {
@@ -23,6 +24,10 @@ class AdminController extends Controller
     public function dashboard()
     {
         // Solo el admin puede ver el dashboard
+        if (!auth()->check()) {
+            abort(403, 'No autenticado');
+        }
+
         if (auth()->user()->email !== 'admin@ondori.com') {
             abort(403, 'No autorizado');
         }
@@ -61,8 +66,17 @@ class AdminController extends Controller
             'category' => 'required|in:hombre,mujer,ofertas',
             'nombre' => 'required|string|max:150',
             'descripcion' => 'required|string',
+            'tipoRopa' => 'nullable|string|max:100',
+            'color' => 'nullable|string|max:50',
+            'talla' => 'nullable|string|max:100',
             'precio' => 'required|numeric|min:0',
+            'stock' => 'nullable|integer|min:0',
             'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ], [
+            'foto.required' => 'Selecciona una foto del producto.',
+            'foto.image' => 'La foto debe ser una imagen válida.',
+            'foto.mimes' => 'La foto debe estar en formato JPEG, PNG, JPG o GIF.',
+            'foto.max' => 'La foto no puede pesar más de 2 MB.',
         ]);
         
         // Subir imagen
@@ -73,6 +87,10 @@ class AdminController extends Controller
             
             // Determinar carpeta según categoría
             $folder = 'img/' . $request->category;
+            if (!File::exists(public_path($folder))) {
+                File::makeDirectory(public_path($folder), 0755, true);
+            }
+
             $image->move(public_path($folder), $imageName);
             $imagePath = $folder . '/' . $imageName;
         }

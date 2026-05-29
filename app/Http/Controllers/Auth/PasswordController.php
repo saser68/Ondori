@@ -20,9 +20,14 @@ class PasswordController extends Controller
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
-        $request->user()->update([
-            'password' => Hash::make($validated['password']),
+        $user = $request->user();
+        $user->update([
+            'Password' => Hash::make($validated['password']),
         ]);
+
+        // Verificar a dónde va a redirigir
+        $previousUrl = url()->previous();
+        \Log::info('Password updated for user: ' . $user->email . '. Redirecting to: ' . $previousUrl);
 
         return back()->with('status', 'password-updated');
     }

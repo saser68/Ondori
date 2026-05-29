@@ -28,7 +28,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Si es el admin, redirigir al dashboard, si no, a la página principal
+        if (auth()->user()->email === 'admin@ondori.com') {
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
+
+        return redirect()->intended('/');
     }
 
     /**

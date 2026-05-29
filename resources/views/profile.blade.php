@@ -5,6 +5,7 @@
 @section('content')
 <div class="max-w-2xl mx-auto py-8">
     <div class="bg-white rounded-lg shadow p-6">
+        {{-- perfil del usuario, este archivo lo uso para mostrar datos basicos --}}
         <h1 class="text-2xl font-bold text-gray-900 mb-6">Mi Perfil</h1>
         
         <!-- Avatar y Nombre -->
@@ -13,11 +14,12 @@
                 {{ substr(auth()->user()->Nombre, 0, 1) }}
             </div>
             <h2 class="text-xl font-semibold">{{ auth()->user()->Nombre }} {{ auth()->user()->Apellido }}</h2>
-            <p class="text-gray-600">{{ auth()->user()->Email }}</p>
+            <p class="text-gray-600">{{ auth()->user()->email }}</p>
         </div>
         
         <!-- Información Básica -->
         <div class="space-y-4 mb-6">
+            {{-- datos del usuario}}
             <div class="flex justify-between py-2 border-b">
                 <span class="text-gray-600">Nombre</span>
                 <span class="font-medium">{{ auth()->user()->Nombre }}</span>
@@ -28,7 +30,7 @@
             </div>
             <div class="flex justify-between py-2 border-b">
                 <span class="text-gray-600">Email</span>
-                <span class="font-medium">{{ auth()->user()->Email }}</span>
+                <span class="font-medium">{{ auth()->user()->email }}</span>
             </div>
             <div class="flex justify-between py-2 border-b">
                 <span class="text-gray-600">Teléfono</span>
@@ -47,6 +49,7 @@
         </div>
 
         <div class="mt-8 bg-gray-50 p-6 rounded-lg border">
+            {{-- esto es lo del cambio de password, lo deje con el bag updatePassword x si acaso --}}
             <h2 class="text-xl font-semibold text-gray-900 mb-4">Cambiar contraseña</h2>
 
             @if(session('status') === 'password-updated')
@@ -80,6 +83,7 @@
                     <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black" required>
                 </div>
 
+                {{-- el boton es simple, no le agrego mas clases raras --}}
                 <button type="submit" class="w-full bg-black text-white px-4 py-2 rounded hover:bg-gray-900 transition">
                     Actualizar contraseña
                 </button>
