@@ -1,0 +1,40 @@
+# Nixpacks configuration for Railway deployment
+# Composer is explicitly included in nixPkgs so it is available on PATH
+# during the install phase. view:cache is deferred to the start command
+# because it requires a live database connection.
+
+[phases.setup]
+nixPkgs = [
+  "php83",
+  "php83Extensions.pdo",
+  "php83Extensions.pdo_mysql",
+  "php83Extensions.mbstring",
+  "php83Extensions.tokenizer",
+  "php83Extensions.xml",
+  "php83Extensions.ctype",
+  "php83Extensions.fileinfo",
+  "php83Extensions.curl",
+  "php83Extensions.zip",
+  "php83Extensions.bcmath",
+  "phpPackages.composer",
+  "nodejs_20",
+  "nodePackages.npm",
+  "mariadb-client"
+]
+
+[phases.install]
+cmds = [
+  "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist",
+  "npm ci"
+]
+
+[phases.build]
+cmds = [
+  "npm run build",
+  "php artisan config:cache",
+  "php artisan route:cache",
+  "php artisan event:cache"
+]
+
+[start]
+cmd = "php artisan migrate --force && php artisan view:cache && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"
